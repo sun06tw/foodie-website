@@ -17,7 +17,7 @@ export default function FoodOrderingWebsite() {
         .select('*');
       
       if (error) {
-        console.error('抓取失敗:', error);
+        console.error('資料庫讀取失敗原因:', error.message);
       } else {
         setMenuItems(data || []);
       }
