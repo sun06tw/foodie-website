@@ -7,19 +7,19 @@ export default function FoodOrderingWebsite() {
   const menuItems = [
     {
       id: 1,
-      name: "經典牛肉漢堡",
+      name: "起司牛肉漢堡",
       price: 180,
       image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 2,
-      name: "起司培根漢堡",
+      name: "經典牛肉漢堡",
       price: 210,
       image: "https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 3,
-      name: "炸雞套餐",
+      name: "炸雞塊套餐",
       price: 240,
       image: "https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=1200&auto=format&fit=crop",
     },
@@ -31,7 +31,7 @@ export default function FoodOrderingWebsite() {
     },
     {
       id: 5,
-      name: "炙燒鮭魚壽司",
+      name: "鮭魚壽司捲",
       price: 260,
       image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1200&auto=format&fit=crop",
     },
@@ -43,7 +43,7 @@ export default function FoodOrderingWebsite() {
     },
     {
       id: 7,
-      name: "海鮮義大利麵",
+      name: "肉醬義大利麵",
       price: 280,
       image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=1200&auto=format&fit=crop",
     },
@@ -61,7 +61,7 @@ export default function FoodOrderingWebsite() {
     },
     {
       id: 10,
-      name: "韓式炸雞",
+      name: "炸雞",
       price: 260,
       image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=1200&auto=format&fit=crop",
     },
@@ -91,7 +91,7 @@ export default function FoodOrderingWebsite() {
     },
     {
       id: 15,
-      name: "草莓鬆餅",
+      name: "藍莓鬆餅",
       price: 160,
       image: "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?q=80&w=1200&auto=format&fit=crop",
     },
@@ -103,13 +103,13 @@ export default function FoodOrderingWebsite() {
     },
     {
       id: 17,
-      name: "抹茶冰淇淋",
+      name: "巧克力冰淇淋",
       price: 120,
       image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 18,
-      name: "鮮蝦炒飯",
+      name: "蝦仁炒飯",
       price: 200,
       image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1200&auto=format&fit=crop",
     },
