@@ -20,12 +20,32 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="p-10">
-      <h1 className="text-2xl font-bold mb-4">後台管理 - 新增餐點</h1>
-      <input placeholder="餐點名稱" value={name} onChange={e => setName(e.target.value)} className="border p-2 block mb-2"/>
-      <input placeholder="價格" value={price} onChange={e => setPrice(e.target.value)} className="border p-2 block mb-2"/>
-      <input placeholder="圖片網址" value={image} onChange={e => setImage(e.target.value)} className="border p-2 block mb-2"/>
-      <button onClick={handleAddFood} className="bg-blue-500 text-white p-2 rounded">送出</button>
-    </div>
+    <div className="flex flex-col gap-4 max-w-md mx-auto">
+  <input 
+    className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" 
+    placeholder="餐點名稱" 
+    value={name} 
+    onChange={(e) => setName(e.target.value)} 
+  />
+  <input 
+    className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" 
+    type="number"
+    placeholder="價格" 
+    value={price} 
+    onChange={(e) => setPrice(e.target.value)} 
+  />
+  <input 
+    className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" 
+    placeholder="圖片網址" 
+    value={image} 
+    onChange={(e) => setImage(e.target.value)} 
+  />
+  <button 
+    className="bg-blue-600 text-white p-3 rounded-xl font-bold hover:bg-blue-700 active:scale-95 transition-all"
+    onClick={handleAddFood}
+  >
+    新增餐點
+  </button>
+</div>
   );
 }
