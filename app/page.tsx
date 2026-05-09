@@ -1,10 +1,30 @@
 "use client"; // 
 import toast, { Toaster } from 'react-hot-toast';
-import { useState } from 'react'; // 
+import { createClient } from '@supabase/supabase-js';
+import { useState, useEffect } from 'react'; // 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 export default function FoodOrderingWebsite() {
+  const [menuItems, setMenuItems] = useState<any[]>([]);
   const [isPending, setIsPending] = useState(false);
-  const [cart, setCart] = useState<{ id: number; name: string; price: number; quantity: number }[]>([]);
-  const menuItems = [
+  const [cart, setCart] = useState<any[]>([]);
+  useEffect(() => {
+    async function getFoods() {
+      const { data, error } = await supabase
+        .from('foods') // 這裡要跟你剛才在 Supabase 建立的資料表名稱一樣
+        .select('*');
+      
+      if (error) {
+        console.error('抓取失敗:', error);
+      } else {
+        setMenuItems(data || []);
+      }
+    }
+    getFoods();
+  }, []);
+  /*const menuItems = [
     {
       id: 1,
       name: "起司牛肉漢堡",
@@ -125,7 +145,7 @@ export default function FoodOrderingWebsite() {
       price: 170,
       image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?q=80&w=1200&auto=format&fit=crop",
     },
-  ];
+  ];*/
  const addToCart = (item: any) => {
     setCart((prevCart: any[]) => {
       const existing = prevCart.find((i) => i.id === item.id);
