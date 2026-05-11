@@ -42,6 +42,7 @@ export default function AdminPage() {
 
     if (!error) {
       toast.success("餐點新增成功！🎉");
+      fetchFoods();
       // 清空輸入框
       setName('');
       setPrice('');
