@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
+import { Trash2 } from 'lucide-react';
 
 export default function AdminPage() {
   const [name, setName] = useState('');
