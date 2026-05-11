@@ -14,7 +14,11 @@ export default function AdminPage() {
 
   const fetchFoods = async () => {
     const { data, error } = await supabase.from('foods').select('*').order('created_at', { ascending: false });
-    if (!error) setFoods(data || []);
+    if (error) {
+      console.error('抓取資料失敗:', error);
+    } else {
+      setFoods(data);
+    }
   };
 
   useEffect(() => {
