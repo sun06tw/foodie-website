@@ -24,7 +24,7 @@ export default function FoodOrderingWebsite() {
     }
     getFoods();
   }, []);
-  
+
  const addToCart = (item: any) => {
     setCart((prevCart: any[]) => {
       const existing = prevCart.find((i) => i.id === item.id);
