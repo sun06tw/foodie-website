@@ -16,11 +16,17 @@ export default function AdminPage() {
 
   const fetchFoods = async () => {
     const { data, error } = await supabase
-      .from('foods')
+      .from('foods') // 確保這是你 Supabase 裡的資料表名稱
       .select('*')
-      .order('created_at', { ascending: false });
-    if (!error) setFoods(data);
+      .order('created_at', { ascending: false }); // 讓最新的排在上面
+
+    if (!error && data) {
+      setFoods(data);
+    }
   };
+  useEffect(() => {
+    fetchFoods();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
