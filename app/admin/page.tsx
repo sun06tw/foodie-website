@@ -67,17 +67,20 @@ export default function AdminPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("確定要刪除這道餐點嗎？")) return;
+  if (confirm('確定要下架這道餐點嗎？')) {
+    const { error } = await supabase
+      .from('foods')
+      .delete()
+      .eq('id', id);
 
-    const { error } = await supabase.from('foods').delete().eq('id', id);
-
-    if (!error) {
-      toast.success("已刪除餐點");
-      fetchFoods(); // 刪除完刷新列表
+    if (error) {
+      alert('刪除失敗');
     } else {
-      toast.error("刪除失敗");
+      // 成功後，重新抓取資料讓列表即時更新
+      fetchFoods(); 
     }
-  };
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
