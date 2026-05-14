@@ -11,14 +11,27 @@ export default function AdminPage() {
   const [image, setImage] = useState('');
   const [foods, setFoods] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false); // 新增：用來控制按鈕的載入狀態
+  const [formData, setFormData] = useState({ name: '', price: '', image: '', category: '漢堡' });
+  const [loading, setLoading] = useState(false);
 
   const fetchFoods = async () => {
-    const { data, error } = await supabase.from('foods').select('*').order('created_at', { ascending: false });
-    if (error) {
-      console.error('抓取資料失敗:', error);
-    } else {
-      setFoods(data);
+    const { data, error } = await supabase
+      .from('foods')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error) setFoods(data);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const { error } = await supabase.from('foods').insert([formData]);
+    if (!error) {
+      alert('新增成功！');
+      setFormData({ name: '', price: '', image: '', category: '漢堡' });
+      fetchFoods();
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -67,112 +80,100 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
-      {/* 提示元件 */}
-      <Toaster position="top-center" reverseOrder={false} />
-
-      {/* 回首頁連結 */}
-      <div className="w-full max-w-md mb-6">
-        <a href="/" className="text-gray-500 hover:text-gray-800 transition-colors flex items-center gap-2 text-sm font-medium">
-          ← 返回點餐首頁
-        </a>
-      </div>
-
-      {/* 主卡片區塊 */}
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-        {/* 卡片標題區 */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
-          <h1 className="text-2xl font-bold text-white tracking-wider">後台管理</h1>
-          <p className="text-blue-100 text-sm mt-1">新增美味餐點至資料庫</p>
-        </div>
-
-        {/* 填寫表單區 */}
-        <div className="p-8 space-y-6">
-          {/* 餐點名稱 */}
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">餐點名稱</label>
-            <input
-              type="text"
-              placeholder="例如：熔岩起司牛肉堡"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-            />
-          </div>
-
-          {/* 價格 */}
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">價格 (NT$)</label>
-            <input
-              type="number"
-              placeholder="例如：180"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-            />
-          </div>
-
-          {/* 圖片網址 */}
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">圖片網址 (URL)</label>
-            <input
-              type="url"
-              placeholder="https://images.unsplash.com/..."
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-            />
-          </div>
-
-          {/* 圖片預覽 */}
-          {image && (
-            <div className="mt-3 h-32 w-full rounded-xl overflow-hidden border border-gray-100 bg-gray-100">
-              <img 
-                src={image} 
-                alt="預覽" 
-                className="w-full h-full object-cover" 
-                onError={(e) => e.currentTarget.style.display = 'none'} 
-              />
-            </div>
-          )}
-
-          {/* 送出按鈕 */}
-          <button
-            onClick={handleAddFood}
-            disabled={isSubmitting}
-            className={`w-full py-4 rounded-xl font-bold text-white text-lg tracking-wide transition-all shadow-md ${
-              isSubmitting 
-              ? 'bg-blue-400 cursor-not-allowed' 
-              : 'bg-blue-600 hover:bg-blue-700 active:scale-[0.98]'
-            }`}
-          >
-            {isSubmitting ? '正在上傳至資料庫...' : '確認新增餐點'}
-          </button>
-        </div>
-      </div>
-
-      {/* 刪除管理區塊 (新增的部分) */}
-      <div className="max-w-2xl mx-auto mt-10 w-full">
-        <h2 className="text-xl font-bold mb-4 text-gray-700">目前菜單管理 ({foods.length})</h2>
-        <div className="grid gap-4">
-          {foods.map((food) => (
-            <div key={food.id} className="bg-white p-4 rounded-2xl shadow-sm border flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <img src={food.image} alt="" className="w-16 h-16 object-cover rounded-lg" />
-                <div>
-                  <h3 className="font-bold">{food.name}</h3>
-                  <p className="text-gray-500 text-sm">${food.price}</p>
-                </div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
+        
+        {/* 左側：新增菜單區 (固定寬度) */}
+        <div className="md:w-1/3">
+          <div className="bg-white p-6 rounded-3xl shadow-lg sticky top-6">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+              ✨ 新增美味菜色
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">品項名稱</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="例如：熔岩起司堡"
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
               </div>
-              <button 
-                onClick={() => handleDelete(food.id)}
-                className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">價格 (TWD)</label>
+                <input
+                  type="number"
+                  required
+                  placeholder="150"
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none"
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">圖片 URL</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none"
+                  value={formData.image}
+                  onChange={(e) => setFormData({...formData, image: e.target.value})}
+                />
+              </div>
+              <button
+                disabled={loading}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:bg-gray-400"
               >
-                刪除
+                {loading ? '上傳中...' : '確認新增品項'}
               </button>
-            </div>
-          ))}
+            </form>
+          </div>
         </div>
+
+        {/* 右側：目前菜單管理 (條列式) */}
+        <div className="md:w-2/3">
+          <div className="flex justify-between items-end mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">目前菜單管理</h2>
+            <span className="text-gray-500 text-sm">共有 {foods.length} 個品項</span>
+          </div>
+          
+          <div className="space-y-4">
+            {foods.length === 0 ? (
+              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-200 text-gray-400">
+                目前尚無品項，請從左側新增
+              </div>
+            ) : (
+              foods.map((food) => (
+                <div key={food.id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center group hover:shadow-md transition-shadow">
+                  <img 
+                    src={food.image} 
+                    alt={food.name} 
+                    className="w-20 h-20 object-cover rounded-xl bg-gray-100"
+                  />
+                  <div className="ml-6 flex-grow">
+                    <h3 className="text-lg font-bold text-gray-800">{food.name}</h3>
+                    <p className="text-orange-600 font-semibold">${food.price}</p>
+                  </div>
+                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      onClick={() => handleDelete(food.id)}
+                      className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                      title="刪除品項"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );
